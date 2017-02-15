@@ -1,0 +1,208 @@
+package gapp.web.controller;
+
+import java.util.List;
+
+import gapp.model.CustomField;
+import gapp.model.Department;
+import gapp.model.Program;
+import gapp.model.Users;
+import gapp.model.dao.CustormFieldDao;
+import gapp.model.dao.DepartmentDAO;
+import gapp.model.dao.ProgramDao;
+
+
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+@Controller
+public class DepartmentController {
+	
+
+	
+	
+	@Autowired
+	private DepartmentDAO departmentdao;
+	
+	@Autowired
+	private CustormFieldDao custormfielddao;
+	
+
+	@Autowired
+	private ProgramDao programdao;
+	
+	
+	@RequestMapping(value = "/users/admin/list.html", method = RequestMethod.GET)
+    public String listDepartment(ModelMap models) {
+		//List<Department> departments = departmentdao.getDepartments(); 
+        models.put("department", new Department());
+        models.put("listDepartment", this.departmentdao.getDepartments());
+        return "/users/admin/list";
+    }
+
+
+   @RequestMapping(value="/users/logout.html")
+     public String logout(){
+	     return "redirect:/home.html";
+}
+   
+   
+  
+   
+ @RequestMapping(value="/users/admin/view/{departmentid}.html")
+ public String view(@PathVariable Integer departmentid, ModelMap models){
+	 Department department = departmentdao.getDepartmentById(departmentid);
+	 			models.put("department",department);
+	 			//System.out.println(department.getDepartmentid());
+	 			//models.put("listDepartment", this.departmentdao.getDepartments());
+	 			return "/users/admin/view";
+	 }
+ 
+	@RequestMapping(value = "/users/admin/adddepartment.html", method=RequestMethod.GET)
+	public String adddepartment(ModelMap models){
+		models.put("department",new Department());
+		return "/users/admin/adddepartment";
+	}
+ 
+ @RequestMapping(value="/users/admin/adddepartment.html",method= RequestMethod.POST)
+ public String adddepartment(@ModelAttribute("department") Department department){
+	 
+	
+	 		
+			if(department.getDepartmentid() == 0){
+				department = departmentdao.addDepartment(department);
+			}
+				return"redirect:/users/admin/list.html"; 
+				
+
+				 			
+	 }
+ 
+	@RequestMapping(value = "/users/admin/addprogram.html", method=RequestMethod.GET)
+	public String addprogram(ModelMap models){
+		models.put("program",new Program());
+		List<Department> dep = departmentdao.getDepartments();
+		System.out.println(dep);
+		models.put("depts", dep);
+		return "/users/admin/addprogram";
+	}
+
+	@RequestMapping(value="/users/admin/addprogram.html", method= RequestMethod.POST)
+	public String addprogram(@ModelAttribute("program") Program program){
+	 		
+			System.out.println(program.getDepartment());
+				
+				program = programdao.addProgram(program);
+				return"redirect:/users/admin/list.html"; 
+ 
+	}
+	
+	
+
+	@RequestMapping(value = "/users/admin/addadditional.html", method=RequestMethod.GET)
+	public String addadditional(ModelMap models){
+		models.put("additional",new CustomField());
+		List<Department> dep = departmentdao.getDepartments();
+		System.out.println(dep);
+		models.put("addi", dep);
+		return "/users/admin/addadditional";
+	}
+	
+	@RequestMapping(value="/users/admin/addadditional.html", method= RequestMethod.POST)
+	public String addadditional(@ModelAttribute("additional") CustomField additional){
+	 		
+				System.out.println(additional.getDepartment());	
+				additional = custormfielddao.addadditional(additional);
+				return "redirect:/users/admin/list.html"; 
+ 
+	}	
+	
+	@RequestMapping(value = "/users/admin/editdepartment/{id}.html", method = RequestMethod.GET)
+    public String editDepartment(@PathVariable Integer id, ModelMap models ){
+		System.out.println(id);
+		models.put("department", departmentdao.getDepartmentById(id));
+        return "/users/admin/editdepartment";
+        
+    }
+	
+	@RequestMapping(value = "/users/admin/editdepartment/{id}.html", method = RequestMethod.POST)
+    public String editDepartment( @ModelAttribute("department") Department department, @PathVariable Integer id, ModelMap models ){
+    	
+		department.setDepartmentid(id);
+		departmentdao.saveDepartment( department);
+        models.put("department",department);
+        return "redirect:/users/admin/view/{id}.html";
+    }
+	
+	@RequestMapping(value = "/users/admin/editprogram/{id}/{programid}.html", method = RequestMethod.GET)
+    public String editprogram(@PathVariable Integer programid, ModelMap models ){
+		
+		models.put("program", programdao.getProgramById(programid));
+		List<Department> dep = departmentdao.getDepartments();
+		models.put("depts", dep);
+        return "/users/admin/editprogram";
+        
+    }
+	
+	@RequestMapping(value = "/users/admin/editprogram/{id}/{programid}.html", method = RequestMethod.POST)
+    public String editprogram( @ModelAttribute("program") Program program, @PathVariable Integer id, @PathVariable Integer programid, ModelMap models ){
+    	
+		program.setDepartment(departmentdao.getDepartmentById(id));
+		program.setProgramid(programid);
+		programdao.saveProgram(program);
+        models.put("program",program);
+        return "redirect:/users/admin/view/{id}.html";
+    }
+	
+	   
+    @RequestMapping(value = "/users/admin/editadditional/{id}/{controlid}.html", method = RequestMethod.GET)
+    public String editadditional( @PathVariable Integer id, @PathVariable Integer controlid, ModelMap models ){
+    	CustomField cusstominfo = custormfielddao.getCustomformById(controlid);
+    	
+        models.put("customfield",cusstominfo);
+        List<Department> dep1 = departmentdao.getDepartments();
+        models.put("depta", dep1);
+        return "users/admin/editadditional";
+    }
+    
+    @RequestMapping(value = "/users/admin/editadditional/{id}/{controlid}.html", method = RequestMethod.POST)
+    public String editadditional( @ModelAttribute("customfield") CustomField customfield, @PathVariable Integer id, 
+    		@PathVariable Integer controlid, ModelMap models ){
+    	customfield.setDepartment(departmentdao.getDepartmentById(id));
+    	customfield.setControlid(controlid);
+    	custormfielddao.save( customfield );
+        models.put( "customfield",customfield);
+        return "redirect:/users/admin/view/{id}.html";
+	
+	
+    }
+    
+    @RequestMapping(value = "/users/admin/removeProg/{id}/{programid}.html", method = RequestMethod.GET)
+    public String removeProgram( @PathVariable Integer id, @PathVariable Integer programid, ModelMap models ){
+    	Program program = programdao.getProgramById(programid);
+    	programdao.remove(program);
+        return "redirect:/users/admin/view/{id}.html";
+    }
+    
+    @RequestMapping(value = "/users/admin/removeCust/{id}/{controlid}.html", method = RequestMethod.GET)
+    public String removeAdditional( @PathVariable Integer id, @PathVariable Integer controlid, ModelMap models ){
+    CustomField custominfo = custormfielddao.getCustomformById(controlid);
+    custormfielddao.removeCustom(custominfo);
+        return "redirect:/users/admin/view/{id}.html";
+    }
+  
+    
+    
+   }		

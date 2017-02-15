@@ -1,0 +1,40 @@
+package gapp.model.dao.jpa;
+
+import gapp.model.Application;
+import gapp.model.Department;
+import gapp.model.dao.ApplicationDao;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
+
+
+
+
+@Repository
+public class ApplicationDaoImpl implements ApplicationDao  {
+	
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
+	
+	
+	@Override
+	public List<Application> listApplication() {
+		return entityManager.createQuery( "from Application where program.department.departmentname = 'Accounting' and term = 'Fall-2016'", Application.class )
+	            .getResultList();
+		}
+
+
+@Override
+	public List<Application> listSubmitted() {
+		return entityManager.createQuery( "from Application where student.users.username = 'student1' and email = 'student1@localhost.localdomain", Application.class )
+	            .getResultList();
+		
+	}
+}

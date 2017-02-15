@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose="0" name="Failed suite [Command line suite]">
+  <test name="Command line test(failed)">
+    <classes>
+      <class name="gapp.model.dao.ApplicationDaoTest">
+        <methods>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="listSubmited"/>
+          <include name="listApplication"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextAfterTestMethod"/>
+        </methods>
+      </class> <!-- gapp.model.dao.ApplicationDaoTest -->
+      <class name="gapp.model.dao.DepartmentDaoTest">
+        <methods>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="getDepartments"/>
+          <include name="springTestContextAfterTestMethod"/>
+        </methods>
+      </class> <!-- gapp.model.dao.DepartmentDaoTest -->
+    </classes>
+  </test> <!-- Command line test(failed) -->
+</suite> <!-- Failed suite [Command line suite] -->

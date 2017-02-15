@@ -1,0 +1,127 @@
+package gapp.model;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+
+
+@Entity
+@Table(name = "application" )
+public class Application implements Serializable {
+
+	
+	private static final long serialVersionUID = 1L;
+	
+	
+	@Id
+    @GeneratedValue
+	@Column(unique=true, nullable=false)
+    private int applicationid;
+	
+	private String term;
+	
+	
+	
+	@ManyToOne
+	@JoinColumn(name="applicantid")
+	private Student student;
+	
+	
+	@ManyToOne
+	private Status statuses;
+	
+	@ManyToOne
+	@JoinColumn(name="programid")
+	private Program program;
+	
+	@OneToMany(mappedBy="application")
+	private List<CustomField> customfield;
+	
+
+	public Application(){
+		
+	}
+
+
+	public int getApplicationid() {
+		return applicationid;
+	}
+
+
+	public void setApplicationid(int applicationid) {
+		this.applicationid = applicationid;
+	}
+
+
+	public String getTerm() {
+		return term;
+	}
+
+
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+
+	
+
+
+	public Program getProgram() {
+		return program;
+	}
+
+
+	public void setProgram(Program program) {
+		this.program = program;
+	}
+
+
+	
+
+
+	
+
+
+	public Student getStudent() {
+		return student;
+	}
+
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+
+	public Status getStatuses() {
+		return statuses;
+	}
+
+
+	public void setStatuses(Status statuses) {
+		this.statuses = statuses;
+	}
+
+
+	public List<CustomField> getCustomfield() {
+		return customfield;
+	}
+
+
+	public void setCustomfield(List<CustomField> customfield) {
+		this.customfield = customfield;
+	}
+
+	
+}
